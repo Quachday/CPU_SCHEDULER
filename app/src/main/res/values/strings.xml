@@ -1,0 +1,6 @@
+<resources>
+    <string name="app_name">gantchart</string>
+    <string name="gant_chart">GANT CHART</string>
+    <string name="draw_chart">DRAW</string>
+
+</resources>
