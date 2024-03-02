@@ -59,7 +59,7 @@ internal object GFG {
             System.out.printf(" %d ", i + 1)
             System.out.printf("	 %d ", bt[i])
             System.out.printf("	 %d", wt[i])
-            System.out.printf("	 %d\n", tat[i])
+            System.out.printf"	 %d\n", tat[i])
         }
         val s = total_wt.toFloat() / n.toFloat()
         val t = total_tat / n
