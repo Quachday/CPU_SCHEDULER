@@ -208,7 +208,7 @@ class MainActivity : ComponentActivity() {
                     mode == 6 -> {
                         var burst = processes.sortedBy { it.burstTime }
                         var quantum = burst[(processes.size*0.8-1).toInt()].burstTime
-                        roundRobin_2(processes , quantum=2)
+                        roundRobin_2(processes , quantum=quantum)
                        }
                 }
             }
@@ -316,9 +316,9 @@ class MainActivity : ComponentActivity() {
                 TableCell(text = "${responseTime[i]}", weight = 0.2f)
             }
         }
-        val averageWaitingTime = waitingTime.average()
-        val averageTurnaroundTime = turnaroundTime.average()
-        val averageResponseTime = responseTime.average()
+        val averageWaitingTime = waitingTime.average().toFloat()
+        val averageTurnaroundTime = turnaroundTime.average().toFloat()
+        val averageResponseTime = responseTime.average().toFloat()
         Draw_avg(averageWaitingTime, averageTurnaroundTime,
             averageResponseTime )
 
@@ -414,9 +414,9 @@ class MainActivity : ComponentActivity() {
                 TableCell(text = "${responseTime[i]}", weight = 0.2f)
             }
         }
-        val averageWaitingTime = waitingTime.average()
-        val averageTurnaroundTime = turnaroundTime.average()
-        val averageResponseTime = responseTime.average()
+        val averageWaitingTime = waitingTime.average().toFloat()
+        val averageTurnaroundTime = turnaroundTime.average().toFloat()
+        val averageResponseTime = responseTime.average().toFloat()
         Draw_avg(averageWaitingTime, averageTurnaroundTime,
             averageResponseTime )
 
@@ -494,10 +494,10 @@ class MainActivity : ComponentActivity() {
         }
 
 
-        val avgWaitTime = waitTimes.average()
-        val avgTurnaroundTime = turnaroundTime.sum().toDouble() / processes.size
-        val avgResponseTime = responseTime.sum().toDouble() / processes.size
-       Draw_avg(avgWaitTime, avgTurnaroundTime, avgResponseTime)
+        val avgWaitTime = waitTimes.average().toFloat()
+        val avgTurnaroundTime = turnaroundTime.sum().toFloat() / processes.size
+        val avgResponseTime = responseTime.sum().toFloat() / processes.size
+        Draw_avg(avgWaitTime, avgTurnaroundTime, avgResponseTime)
     }
 
     //PRI-NON
@@ -578,9 +578,9 @@ class MainActivity : ComponentActivity() {
         }
 
         responseTime[0]= 0
-        val avgWaitTime = waitTimes.average()
-        val avgTurnaroundTime = turnaroundTime.sum().toDouble() / processes.size
-        val avgResponseTime = responseTime.sum().toDouble() / processes.size
+        val avgWaitTime = waitTimes.average().toFloat()
+        val avgTurnaroundTime = turnaroundTime.sum().toFloat() / processes.size
+        val avgResponseTime = responseTime.sum().toFloat() / processes.size
         Draw_avg(avgWaitTime = avgWaitTime,
             avgTurnaroundTime =avgTurnaroundTime ,
             avgResponseTime =avgResponseTime )
@@ -653,9 +653,9 @@ class MainActivity : ComponentActivity() {
             }
         }
 
-        val avgWaitTime = waitTimes.average()
-        val avgTurnaroundTime = totalTime.toDouble() / processes.size
-        val avgResponseTime = responseTime.sum().toDouble() / processes.size
+        val avgWaitTime = waitTimes.average().toFloat()
+        val avgTurnaroundTime = totalTime.toFloat() / processes.size
+        val avgResponseTime = responseTime.sum().toFloat() / processes.size
         Draw_avg(avgWaitTime,avgTurnaroundTime, avgResponseTime)
     }
 
@@ -719,9 +719,9 @@ class MainActivity : ComponentActivity() {
                 TableCell(text = "${responseTime[i]}", weight = 0.2f)
             }
         }
-        val avgWaitTime = waitingTime.average()
-        val avgTurnaroundTime = turnaroundTime.average()
-        val avgResponseTime = responseTime.average()
+        val avgWaitTime = waitingTime.average().toFloat()
+        val avgTurnaroundTime = turnaroundTime.average().toFloat()
+        val avgResponseTime = responseTime.average().toFloat()
         Draw_avg(avgWaitTime,avgTurnaroundTime,avgResponseTime)
     }
 
@@ -736,14 +736,14 @@ class MainActivity : ComponentActivity() {
         }
     }
     @Composable
-    fun Draw_avg(avgWaitTime:Double, avgTurnaroundTime: Double,
-                 avgResponseTime: Double) {
+    fun Draw_avg(avgWaitTime:Float, avgTurnaroundTime: Float,
+                 avgResponseTime: Float) {
         Row(Modifier.background(Color.White)) {
             TableCell(text = "Avg", weight = 0.2f)
             TableCell(text = "", weight = 0.2f)
-            TableCell(text = "$avgWaitTime", weight = 0.2f)
-            TableCell(text = "$avgTurnaroundTime", weight = 0.2f)
-            TableCell(text = "$avgResponseTime", weight = 0.2f)
+            TableCell(text = "${avgWaitTime.toFloat()}", weight = 0.2f)
+            TableCell(text = "${avgTurnaroundTime.toFloat()}", weight = 0.2f)
+            TableCell(text = "${avgResponseTime.toFloat()}", weight = 0.2f)
         }
     }
 
