@@ -4,12 +4,15 @@ import android.widget.Toast
 import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
+import androidx.compose.foundation.border
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.RowScope
 import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Add
@@ -27,9 +30,13 @@ import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import com.example.gantchart.MainActivity
+import java.io.File
 
 @Composable
-fun UpperPanel( count : Int, onIncrement: () -> Unit ) {
+fun UpperPanel( count : Int, onIncrement: () -> Unit, onFCFS: () -> Unit, onSJF_pre: () -> Unit,onSJF_non: () -> Unit,
+                onPri_non: () -> Unit,onPri_pre: () -> Unit,onRobin_Round: () -> Unit
+                ) {
     var context = LocalContext.current
 
     Column(
@@ -78,14 +85,53 @@ fun UpperPanel( count : Int, onIncrement: () -> Unit ) {
                     .padding(end = 5.dp)// Adjust the weight to control the size of TextField
             )
         }
-        Button(onClick = {
-            Toast.makeText(context, "Draw Succesful!", Toast.LENGTH_SHORT).show()
+        Button(onClick = { onFCFS()
         },
             border = BorderStroke(1.dp, Color.Black),
             shape =  RoundedCornerShape(10.dp),
             colors = ButtonDefaults.buttonColors(containerColor = Color(0XFFF4CE14))
         ) {
-            Text(text = "Draw", color = Color.Black)
+            Text(text = "FCFS", color = Color.Black)
+        }
+        Button(onClick = { onSJF_pre()
+        },
+            border = BorderStroke(1.dp, Color.Black),
+            shape =  RoundedCornerShape(10.dp),
+            colors = ButtonDefaults.buttonColors(containerColor = Color(0XFFF4CE14))
+        ) {
+            Text(text = "SJF-pre", color = Color.Black)
+        }
+        Button(onClick = { onSJF_non()
+        },
+            border = BorderStroke(1.dp, Color.Black),
+            shape =  RoundedCornerShape(10.dp),
+            colors = ButtonDefaults.buttonColors(containerColor = Color(0XFFF4CE14))
+        ) {
+            Text(text = "SJF-non", color = Color.Black)
+        }
+        Button(onClick = { onPri_non()
+        },
+            border = BorderStroke(1.dp, Color.Black),
+            shape =  RoundedCornerShape(10.dp),
+            colors = ButtonDefaults.buttonColors(containerColor = Color(0XFFF4CE14))
+        ) {
+            Text(text = "Pri-non", color = Color.Black)
+        }
+        Button(onClick = { onPri_pre()
+        },
+            border = BorderStroke(1.dp, Color.Black),
+            shape =  RoundedCornerShape(10.dp),
+            colors = ButtonDefaults.buttonColors(containerColor = Color(0XFFF4CE14))
+        ) {
+            Text(text = "Pri-pre", color = Color.Black)
+        }
+        Button(onClick = { onRobin_Round()
+        },
+            border = BorderStroke(1.dp, Color.Black),
+            shape =  RoundedCornerShape(10.dp),
+            colors = ButtonDefaults.buttonColors(containerColor = Color(0XFFF4CE14))
+        ) {
+            Text(text = "Robin-2", color = Color.Black)
         }
 
         Image(painterResource(R.drawable.draw),contentDescription = "")
@@ -97,7 +143,7 @@ fun UpperPanel( count : Int, onIncrement: () -> Unit ) {
                     imageVector = Icons.Default.Add,
                     contentDescription = "Add")
             }
-            Text(text = "$count")
+            //Text(text = "$count")
         }
     }
 }
