@@ -10,6 +10,7 @@ import android.widget.ImageView
 import android.widget.Toast
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
+import androidx.annotation.IntRange
 import androidx.annotation.RequiresApi
 import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.Image
@@ -222,7 +223,8 @@ class MainActivity : ComponentActivity() {
                        val burstTime: Int, var completionTime: Int = 0,
                        var turnaroundTime: Int = 0,
                        var waitingTime: Int = 0,
-                        var priority: Int)
+                        var priority: Int,
+        var firstRun:Int = -1)
 
 
     @Composable
@@ -233,6 +235,7 @@ class MainActivity : ComponentActivity() {
         val completionTime = IntArray(n)
         val waitingTime = IntArray(n)
         val turnaroundTime = IntArray(n)
+        var responseTime = IntArray(n)
 
         var time = 0
         var mostprioritized = Int.MAX_VALUE
@@ -258,6 +261,9 @@ class MainActivity : ComponentActivity() {
                         mostprioritized_id = i
                         check = true //check = true -> there is a process to run
                         switch = true
+                        if (processes[i].firstRun == -1) {
+                            processes[i].firstRun = time
+                        }
                     }
                 }
 
@@ -295,10 +301,8 @@ class MainActivity : ComponentActivity() {
             burst.forEach{ e -> total += e}
             TableCell("E\n$total",0.2f)
         }
-        val totalWaitingTime = waitingTime.sum()
-        val averageWaitingTime = totalWaitingTime.toFloat() / n
-        val totalTurnaroundTime = turnaroundTime.sum()
-        val averageTurnaroundTime = totalTurnaroundTime.toFloat() / n
+
+
         Column(
             Modifier
                 .fillMaxWidth()
@@ -310,22 +314,32 @@ class MainActivity : ComponentActivity() {
                 TableCell(text = "End", weight = 0.2f)
                 TableCell(text = "Waiting", weight = 0.2f)
                 TableCell(text = "TAround ", weight = 0.2f)
+                TableCell(text = "Res", weight = 0.2f)
             }
 
         }
         for (i in 0 until n) {
-            Row(Modifier.background(Color.White)) {
+                responseTime[i] = processes[i].firstRun - processes[i].arrivalTime
+                Row(Modifier.background(Color.White)) {
                 TableCell(text = "P${i+1}", weight = 0.2f)
                 TableCell(text = "${completionTime[i]}", weight = 0.2f)
                 TableCell(text = "${waitingTime[i]}", weight = 0.2f)
                 TableCell(text = "${turnaroundTime[i]}", weight = 0.2f)
+                    TableCell(text = "${responseTime[i]}", weight = 0.2f)
             }
         }
+        val totalWaitingTime = waitingTime.sum()
+        val averageWaitingTime = totalWaitingTime.toFloat() / n
+        val totalTurnaroundTime = turnaroundTime.sum()
+        val averageTurnaroundTime = totalTurnaroundTime.toFloat() / n
+        val totalResponseTime = responseTime.sum()
+        val averageResponseTime = totalResponseTime.toFloat() / n
         Row(Modifier.background(Color.White)) {
             TableCell(text = "Avg", weight = 0.2f)
             TableCell(text = "", weight = 0.2f)
             TableCell(text = "$averageWaitingTime", weight = 0.2f)
             TableCell(text = "$averageTurnaroundTime", weight = 0.2f)
+            TableCell(text = "$averageResponseTime", weight = 0.2f)
         }
 
     }
@@ -338,6 +352,7 @@ class MainActivity : ComponentActivity() {
         val completionTime = IntArray(n)
         val waitingTime = IntArray(n)
         val turnaroundTime = IntArray(n)
+        val responseTime = IntArray(n)
 
         var time = 0
         var minBurst = Int.MAX_VALUE
@@ -363,8 +378,10 @@ class MainActivity : ComponentActivity() {
                         shortest = i
                         check = true //check = true -> there is a process to run
                         switch = true
+
                     }
                 }
+
 
                 // if there is no process to run, time passes
                 if (!check) {
@@ -376,7 +393,9 @@ class MainActivity : ComponentActivity() {
                 if(switch){
                     TableCell(text = "P${shortest+1}\n$time", weight = 0.2f)
                 }
-
+                if (processes[shortest].firstRun == -1) {
+                    processes[shortest].firstRun = time
+                }
                 remainingTime[shortest]--
 
                 minBurst = remainingTime[shortest]
@@ -403,10 +422,7 @@ class MainActivity : ComponentActivity() {
             burst.forEach{ e -> total += e}
             TableCell("E\n$total",0.2f)
         }
-        val totalWaitingTime = waitingTime.sum()
-        val averageWaitingTime = totalWaitingTime.toFloat() / n
-        val totalTurnaroundTime = turnaroundTime.sum()
-        val averageTurnaroundTime = totalTurnaroundTime.toFloat() / n
+
         Column(
             Modifier
                 .fillMaxWidth()
@@ -418,22 +434,33 @@ class MainActivity : ComponentActivity() {
                 TableCell(text = "End", weight = 0.2f)
                 TableCell(text = "Waiting", weight = 0.2f)
                 TableCell(text = "TAround ", weight = 0.2f)
+                TableCell(text = "Res ", weight = 0.2f)
             }
 
         }
         for (i in 0 until n) {
+            responseTime[i] = processes[i].firstRun - processes[i].arrivalTime
             Row(Modifier.background(Color.White)) {
                 TableCell(text = "P${i+1}", weight = 0.2f)
                 TableCell(text = "${completionTime[i]}", weight = 0.2f)
                 TableCell(text = "${waitingTime[i]}", weight = 0.2f)
                 TableCell(text = "${turnaroundTime[i]}", weight = 0.2f)
+                TableCell(text = "${responseTime[i]}", weight = 0.2f)
             }
         }
+        val totalWaitingTime = waitingTime.sum()
+        val averageWaitingTime = totalWaitingTime.toFloat() / n
+        val totalTurnaroundTime = turnaroundTime.sum()
+        val averageTurnaroundTime = totalTurnaroundTime.toFloat() / n
+        val totalResponseTime = responseTime.sum()
+        val averageResponseTime = totalResponseTime.toFloat() / n
         Row(Modifier.background(Color.White)) {
             TableCell(text = "Avg", weight = 0.2f)
             TableCell(text = "", weight = 0.2f)
             TableCell(text = "$averageWaitingTime", weight = 0.2f)
             TableCell(text = "$averageTurnaroundTime", weight = 0.2f)
+            TableCell(text = "$averageResponseTime", weight = 0.2f)
+
         }
 
     }
@@ -448,6 +475,7 @@ class MainActivity : ComponentActivity() {
         val completionTime = IntArray(processes.size+1)
         val waitingTime = IntArray(processes.size+1)
         val turnaroundTime = IntArray(processes.size+1)
+        val responseTime = IntArray(processes.size+1)
 
         Column(
             Modifier
@@ -469,6 +497,8 @@ class MainActivity : ComponentActivity() {
                     //fine the shortest
                     val shortestJob = availableProcesses.minByOrNull { it.burstTime }!!
                     //running seamlessly till finishing the job
+                    processes[shortestJob.id-1].firstRun = currentTime
+
                     sortedProcesses -= shortestJob
                     TableCell(
                         text = "P${shortestJob.id}\n${currentTime}",
@@ -498,23 +528,30 @@ class MainActivity : ComponentActivity() {
                 TableCell(text = "End", weight = 0.2f)
                 TableCell(text = "Waiting", weight = 0.2f)
                 TableCell(text = "TAround ", weight = 0.2f)
+                TableCell(text = "Res ", weight = 0.2f)
             }
-            for (i in 1..processes.size)
-                Row(Modifier.background(Color.White)) {
-                    TableCell(text = "P${i}", weight = 0.2f)
-                    TableCell(text = "${completionTime[i]}", weight = 0.2f)
-                    TableCell(text = "${waitingTime[i]}", weight = 0.2f)
-                    TableCell(text = "${turnaroundTime[i]}", weight = 0.2f)
+            for (i in 0 until processes.size) {
+                responseTime[i+1] = processes[i].firstRun - processes[i].arrivalTime
+            Row(Modifier.background(Color.White)) {
+                    TableCell(text = "P${i+1}", weight = 0.2f)
+                    TableCell(text = "${completionTime[i+1]}", weight = 0.2f)
+                    TableCell(text = "${waitingTime[i+1]}", weight = 0.2f)
+                    TableCell(text = "${turnaroundTime[i+1]}", weight = 0.2f)
+                    TableCell(text = "${responseTime[i+1]}", weight = 0.2f)
                 }
+            }
         }
 
+
         val avgWaitTime = waitTimes.average()
-        val avgTurnaroundTime = totalTime.toDouble() / processes.size
+        val avgTurnaroundTime = turnaroundTime.sum().toDouble() / processes.size
+        val avgResponseTime = responseTime.sum().toDouble() / processes.size
         Row(Modifier.background(Color.White)) {
             TableCell(text = "Avg", weight = 0.2f)
             TableCell(text = "", weight = 0.2f)
             TableCell(text = "$avgWaitTime", weight = 0.2f)
             TableCell(text = "$avgTurnaroundTime", weight = 0.2f)
+           TableCell(text = "$avgResponseTime", weight = 0.2f)
         }
     }
 
@@ -528,6 +565,7 @@ class MainActivity : ComponentActivity() {
         val completionTime = IntArray(processes.size+1)
         val waitingTime = IntArray(processes.size+1)
         val turnaroundTime = IntArray(processes.size+1)
+        val responseTime = IntArray(processes.size+1)
 
         Column(
             Modifier
@@ -548,6 +586,8 @@ class MainActivity : ComponentActivity() {
 
                     //fine the shortest
                     val prioritizedJob = availableProcesses.minByOrNull { it.priority}!!
+                    processes[prioritizedJob.id-1].firstRun = currentTime
+
                     //running seamlessly till finishing the job
                     sortedProcesses -= prioritizedJob
                     TableCell(
@@ -578,23 +618,30 @@ class MainActivity : ComponentActivity() {
                 TableCell(text = "End", weight = 0.2f)
                 TableCell(text = "Waiting", weight = 0.2f)
                 TableCell(text = "TAround ", weight = 0.2f)
+                TableCell(text = "Res ", weight = 0.2f)
             }
-            for (i in 1..processes.size)
+            for (i in 0 until processes.size){
+                responseTime[i+1] = processes[i].firstRun - processes[i].arrivalTime
                 Row(Modifier.background(Color.White)) {
-                    TableCell(text = "P${i}", weight = 0.2f)
-                    TableCell(text = "${completionTime[i]}", weight = 0.2f)
-                    TableCell(text = "${waitingTime[i]}", weight = 0.2f)
-                    TableCell(text = "${turnaroundTime[i]}", weight = 0.2f)
+                    TableCell(text = "P${i+1}", weight = 0.2f)
+                    TableCell(text = "${completionTime[i+1]}", weight = 0.2f)
+                    TableCell(text = "${waitingTime[i+1]}", weight = 0.2f)
+                    TableCell(text = "${turnaroundTime[i+1]}", weight = 0.2f)
+                    TableCell(text = "${responseTime[i+1]}", weight = 0.2f)
                 }
+            }
         }
 
+        responseTime[0]= 0
         val avgWaitTime = waitTimes.average()
-        val avgTurnaroundTime = totalTime.toDouble() / processes.size
+        val avgTurnaroundTime = turnaroundTime.sum().toDouble() / processes.size
+        val avgResponseTime = responseTime.sum().toDouble() / processes.size
         Row(Modifier.background(Color.White)) {
             TableCell(text = "Avg", weight = 0.2f)
             TableCell(text = "", weight = 0.2f)
             TableCell(text = "$avgWaitTime", weight = 0.2f)
             TableCell(text = "$avgTurnaroundTime", weight = 0.2f)
+            TableCell(text = "$avgResponseTime", weight = 0.2f)
         }
     }
     @Composable
@@ -607,7 +654,7 @@ class MainActivity : ComponentActivity() {
         val completionTime = IntArray(processes.size+1)
         val waitingTime = IntArray(processes.size+1)
         val turnaroundTime = IntArray(processes.size+1)
-
+        val responseTime = IntArray(processes.size+1)
         Column(
             Modifier
                 .fillMaxWidth()
@@ -626,23 +673,24 @@ class MainActivity : ComponentActivity() {
                     }
 
                     //fine the shortest
-                    val shortestJob = availableProcesses[0]!!
+                    val firstJob = availableProcesses[0]!!
                     //running seamlessly till finishing the job
-                    sortedProcesses -= shortestJob
+                    processes[firstJob.id-1].firstRun = currentTime
+                    sortedProcesses -= firstJob
                     TableCell(
-                        text = "P${shortestJob.id}\n${currentTime}",
+                        text = "P${firstJob.id}\n${currentTime}",
                         weight = 0.2f
                     )
 
 
-                    val waitTime = currentTime - shortestJob.arrivalTime
+                    val waitTime = currentTime - firstJob.arrivalTime
                     waitTimes += waitTime
-                    currentTime += shortestJob.burstTime
-                    totalTime += currentTime - shortestJob.arrivalTime
-                    val taroundTime = currentTime - shortestJob.arrivalTime
-                    completionTime[shortestJob.id] = currentTime
-                    waitingTime[shortestJob.id] = waitTime
-                    turnaroundTime[shortestJob.id] = taroundTime
+                    currentTime += firstJob.burstTime
+                    totalTime += currentTime - firstJob.arrivalTime
+                    val taroundTime = currentTime - firstJob.arrivalTime
+                    completionTime[firstJob.id] = currentTime
+                    waitingTime[firstJob.id] = waitTime
+                    turnaroundTime[firstJob.id] = taroundTime
 
                 }
                 TableCell(
@@ -655,23 +703,30 @@ class MainActivity : ComponentActivity() {
                 TableCell(text = "End", weight = 0.2f)
                 TableCell(text = "Waiting", weight = 0.2f)
                 TableCell(text = "TAround ", weight = 0.2f)
+                TableCell(text = "Res ", weight = 0.2f)
             }
-            for (i in 1..processes.size)
+            for (i in 1..processes.size) {
+                responseTime[i] = processes[i-1].firstRun - processes[i-1].arrivalTime
+
                 Row(Modifier.background(Color.White)) {
                     TableCell(text = "P${i}", weight = 0.2f)
                     TableCell(text = "${completionTime[i]}", weight = 0.2f)
                     TableCell(text = "${waitingTime[i]}", weight = 0.2f)
                     TableCell(text = "${turnaroundTime[i]}", weight = 0.2f)
+                    TableCell(text = "${responseTime[i]}", weight = 0.2f)
                 }
+            }
         }
 
         val avgWaitTime = waitTimes.average()
         val avgTurnaroundTime = totalTime.toDouble() / processes.size
+        val avgResponseTime = responseTime.sum().toDouble() / processes.size
         Row(Modifier.background(Color.White)) {
             TableCell(text = "Avg", weight = 0.2f)
             TableCell(text = "", weight = 0.2f)
             TableCell(text = "$avgWaitTime", weight = 0.2f)
             TableCell(text = "$avgTurnaroundTime", weight = 0.2f)
+            TableCell(text = "$avgResponseTime", weight = 0.2f)
         }
     }
     @Composable
