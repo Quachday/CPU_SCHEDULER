@@ -131,10 +131,10 @@ fun UpperPanel( count : Int, onIncrement: () -> Unit, onFCFS: () -> Unit, onSJF_
             shape =  RoundedCornerShape(10.dp),
             colors = ButtonDefaults.buttonColors(containerColor = Color(0XFFF4CE14))
         ) {
-            Text(text = "Robin-2", color = Color.Black)
+            Text(text = "Robin", color = Color.Black)
         }
 
-        Image(painterResource(R.drawable.draw),contentDescription = "")
+        Image(painterResource(R.drawable.linux),contentDescription = "")
         Row(modifier = Modifier.fillMaxWidth(),
             horizontalArrangement = Arrangement.Center,
             verticalAlignment = Alignment.CenterVertically) {
