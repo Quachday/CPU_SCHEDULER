@@ -46,45 +46,7 @@ fun UpperPanel( count : Int, onIncrement: () -> Unit, onFCFS: () -> Unit, onSJF_
             .background(Color(0XFF495E57)),
         verticalArrangement =  Arrangement.Center,
         horizontalAlignment =  Alignment.CenterHorizontally) {
-        Text(
-            text = "Gant Chart",
-            fontSize = 32.sp,
-            color = Color(0xFFF4CE14),
-        )
-        Text(
-            text = "CPU SCHEDULER",
-            fontSize = 32.sp,
-            color = Color(0xFFF4CE14),
-        )
-        Row() {
-            TextField(
-                value = "",
-                onValueChange = {},
-                label = { Text(text = "ID") },
-                modifier = Modifier
-                    .weight(1f)
-                    .padding(start = 5.dp)
-                // Adjust the weight to control the size of TextField
-            )
-            TextField(
-                value = "",
-                onValueChange = {},
-                label = { Text(text = "Arrival") },
-                modifier = Modifier
-                    .weight(1f)
-                    .padding(start = 5.dp, end = 5.dp)
-                // Adjust the weight to control the size of TextField
-            )
 
-            TextField(
-                value = "",
-                onValueChange = {},
-                label = { Text(text = "Bust Time") },
-                modifier = Modifier
-                    .weight(1f)
-                    .padding(end = 5.dp)// Adjust the weight to control the size of TextField
-            )
-        }
         Button(onClick = { onFCFS()
         },
             border = BorderStroke(1.dp, Color.Black),
