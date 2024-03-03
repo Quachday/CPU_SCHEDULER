@@ -45,7 +45,7 @@ fun TableScreen(mode: Int) {
                 TableCell(text = "Priority", weight = column4Weight)
             }
         }
-        val fileName = "C:\\Users\\LTC\\AndroidStudioProjects\\gantchart\\app\\src\\main\\java\\com\\example\\gantchart\\data.txt"
+        val fileName = "C:\\Users\\quach\\StudioProjects\\CPU_SCHEDULER\\app\\src\\main\\java\\com\\example\\gantchart\\data.txt"
         val lines: List<String> = File(fileName).readLines()
         var processes: MutableList<Process> = ArrayList()
         // Here are all the lines of your table.
@@ -60,9 +60,9 @@ fun TableScreen(mode: Int) {
                 )
                 processes.add(
                     Process(
-                        i,
-                        numbers[0].toInt(),
-                        numbers[1].toInt(),
+                        id = i,
+                        arrivalTime = numbers[0].toInt(),
+                        burstTime = numbers[1].toInt(),
                         priority = numbers[2].toInt()
                     )
                 )
@@ -114,8 +114,8 @@ fun priority_preemptive(processes: List<Process>) {
     var responseTime = IntArray(n)
 
     var time = 0
-    var mostprioritized = Int.MAX_VALUE
-    var mostprioritized_id = -1
+    var mostprioritized = Int.MIN_VALUE
+    var mostprioritized_id = 10
     var check = false
     var finished = 0
     var switch = false
@@ -132,21 +132,19 @@ fun priority_preemptive(processes: List<Process>) {
             switch = false
             // Find the most prioritized job in ready queue (Better way is that whenever a new process comes in ready queue -> check, not after one second.)
             for (i in 0 until n) {
-                if (processes[i].arrivalTime <= time && processes[i].priority < mostprioritized && remainingTime[i] > 0) {
+                if (processes[i].arrivalTime <= time && processes[i].priority > mostprioritized && remainingTime[i] > 0) {
                     mostprioritized = processes[i].priority
                     mostprioritized_id = i
                     check = true //check = true -> there is a process to run
                     switch = true
-                    if (processes[i].firstRun == -1) {
-                        processes[i].firstRun = time
-                    }
+
                 }
             }
 
             // if there is no process to run, time passes
             if (!check) {
                 time++
-                continue // return the start of while
+                continue
             }
 
             //draw gant chart
@@ -155,7 +153,9 @@ fun priority_preemptive(processes: List<Process>) {
             }
 
             remainingTime[mostprioritized_id]--
-
+             if (processes[mostprioritized_id].firstRun == -1) {
+                 processes[mostprioritized_id].firstRun = time
+             }
 
 
             // done 1 process - which is currently the shortest process
@@ -167,7 +167,7 @@ fun priority_preemptive(processes: List<Process>) {
                 if (waitingTime[mostprioritized_id] < 0) {
                     waitingTime[mostprioritized_id] = 0
                 }
-                mostprioritized = Int.MAX_VALUE
+                mostprioritized = Int.MIN_VALUE
                 switch = true
             }
             time++
